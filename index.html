@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background-image:url("https://images.squarespace-cdn.com/content/v1/5d4b249616f93e000149aebd/1565629613571-HBE8HM7COODR9E6OI9PG/1_CrimeScene.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    overflow:hidden;
+}
+
+.overlay{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    transition:0.6s ease;
+}
+
+.container{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    color:white;
+    width:90%;
+    max-width:600px;
+    transition:0.6s ease;
+}
+
+.container.hide{
+    opacity:0;
+    transform:translateY(-20px);
+    pointer-events:none;
+}
+
+.overlay.hide{
+    opacity:0;
+}
+
+.container h1{
+    font-size:30px;
+    margin-bottom:30px;
+    letter-spacing:1px;
+}
+
+.form-box{
+    display:flex;
+    width:100%;
+}
+
+.form-box input{
+    flex:1;
+    padding:15px;
+    font-size:16px;
+    border:none;
+    outline:none;
+    border-radius:8px 0 0 8px;
+}
+
+.form-box button{
+    padding:15px 25px;
+    background:#ffd700;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+    border-radius:0 8px 8px 0;
+    transition:0.3s;
+}
+
+.form-box button:hover{
+    background:#ffcc00;
+}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#000;
+    opacity:0;
+    visibility:hidden;
+    transition:0.4s ease;
+}
+
+.modal.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-content{
+    background:#111;
+    padding:50px 60px;
+    border-radius:20px;
+    text-align:center;
+    color:white;
+    position:relative;
+    animation:pop 0.4s ease;
+}
+
+.modal-content::after{
+    content:"";
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:6px;
+    background:#ffd700;
+    border-radius:0 0 20px 20px;
+}
+
+@keyframes pop{
+    from{transform:scale(0.7);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+.checkmark{
+    font-size:90px;
+    color:#00ff88;
+    margin-top:25px;
+    opacity:0;
+    transform:scale(0.3) rotate(-20deg);
+    transition:all 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+}
+
+.checkmark.show{
+    opacity:1;
+    transform:scale(1) rotate(0deg);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="container" id="mainContent">
+    <h1>Todas tus peliculas y historias favoritas en un solo lugar</h1>
+    <div class="form-box">
+        <input type="email" id="correo" placeholder="Correo Electronico">
+        <button onclick="enviar()">Enviar</button>
+    </div>
+</div>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2 id="modalText">Estamos verificando tu correo electronico...</h2>
+        <div class="checkmark" id="check">✔</div>
+    </div>
+</div>
+
+<script>
+
+/* Si ya se registró antes */
+if(localStorage.getItem("registrado") === "true"){
+    window.location.href = "home.html";
+}
+
+function enviar(){
+    const correo = document.getElementById("correo").value;
+
+    if(correo === "" || !correo.includes("@")){
+        alert("Ingresa un correo valido");
+        return;
+    }
+
+    const modal = document.getElementById("modal");
+    const mainContent = document.getElementById("mainContent");
+    const overlay = document.getElementById("overlay");
+    const check = document.getElementById("check");
+    const modalText = document.getElementById("modalText");
+
+    /* Desaparece contenido principal */
+    mainContent.classList.add("hide");
+    overlay.classList.add("hide");
+
+    setTimeout(() => {
+        modal.classList.add("active");
+    }, 400);
+
+    /* Simulación 5 segundos */
+    setTimeout(() => {
+        modalText.textContent = "Verificación completada";
+        check.classList.add("show");
+
+        localStorage.setItem("registrado", "true");
+
+        setTimeout(() => {
+            window.location.href = "home.html";
+        }, 1500);
+
+    }, 5400);
+}
+
+</script>
+
+</body>
+</html>
